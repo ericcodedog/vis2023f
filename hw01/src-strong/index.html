@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stacked Bar Chart with D3.js v7</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div id="chart"></div>
+    
+    <script>
+        async function createChart() {
+            const data = await d3.csv("./csv/data.csv");
+
+            const keys = ["作業一", "作業二", "作業三", "作業四", "作業五", "作業六", "作業七", "作業八", "作業九", "作業十"];
+            
+            // Calculate the average score for each assignment
+            const averages = keys.map(key => {
+                const sum = d3.sum(data, d => +d[key]);
+                const avg = sum / data.length;
+                return { assignment: key, average: avg };
+            });
+
+            const margin = {top: 20, right: 20, bottom: 30, left: 40};
+            const width = 960 - margin.left - margin.right;
+            const height = 500 - margin.top - margin.bottom;
+
+            const svg = d3.select("#chart").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            const x = d3.scaleBand()
+                .domain(keys)
+                .range([0, width])
+                .padding(0.1);
+
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(averages, d => d.average)])
+                .range([height, 0]);
+
+            const color = d3.scaleOrdinal()
+                .domain(keys)
+                .range(d3.schemeCategory10);
+
+            svg.selectAll(".bar")
+                .data(averages)
+                .join("rect")
+                  .attr("class", "bar")
+                  .attr("x", d => x(d.assignment))
+                  .attr("width", x.bandwidth())
+                  .attr("y", d => y(d.average))
+                  .attr("height", d => height - y(d.average))
+                  .attr("fill", d => color(d.assignment));
+
+            svg.append("g")
+                .attr("class", "axis axis--x")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x));
+
+            svg.append("g")
+                .attr("class", "axis axis--y")
+                .call(d3.axisLeft(y));
+        }
+
+        createChart();
+    </script>
+</body>
+</html>

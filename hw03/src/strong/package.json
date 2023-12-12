@@ -1,0 +1,14 @@
+{
+  "name": "fdca496238d57cc6",
+  "main": "fdca496238d57cc6@54.js",
+  "version": "54.0.0",
+  "homepage": "https://observablehq.com/d/fdca496238d57cc6",
+  "author": {
+    "name": "北科大-林柏綸's Workspace",
+    "url": "https://observablehq.com/@bei-ke-da-lin-bo-lun-ws"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "@observablehq/runtime": "4 - 5"
+  }
+}
